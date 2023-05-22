@@ -20,9 +20,9 @@ export default async function (req, res) {
     searchData = searchData.filter(elem => elem[elemSearch[0]] == elemSearch[1]);
   });
 
-  const searchDataAlive = searchData.filter(elem => elem.Survived === 1);
-  const searchDataDead = searchData.filter(elem => elem.Survived === 0);
-  data.push(passengers.length - searchDataAlive.length - searchDataDead.length, searchDataAlive.length, searchDataDead.length);
+  const passengersAlive = searchData.filter(elem => elem.Survived === 1);
+  const passengersDead = searchData.filter(elem => elem.Survived === 0);
+  data.push(passengers.length - passengersAlive.length - passengersDead.length, passengersAlive.length, passengersDead.length);
 
   console.log({searchData})
   res.send({data})
