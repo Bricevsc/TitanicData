@@ -9,7 +9,7 @@ import checkAuth from "../middlewares/checkauth.js";
 const router = express.Router();
 
 router.get("/", homeController);
-router.get("/dashboard", checkAuth, dashboardController);
+router.get("/dashboard",  dashboardController);
 router.get("/login", loginController);
 
 router.post("/register", registerController);
