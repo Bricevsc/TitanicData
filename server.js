@@ -3,15 +3,12 @@ import mongoose from "mongoose";
 import session from 'express-session';
 import router from "./router/index.js";
 import * as dotenv from 'dotenv'
+import("./config/db.js");
+
 dotenv.config()
 //Démarrage express
 const app = express();
 const port = 3000;
-//connection a la db
-mongoose.connect("mongodb://localhost:27017/titanic", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
 
 app.use(express.static("public"));
 
