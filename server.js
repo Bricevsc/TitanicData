@@ -25,6 +25,23 @@ app.locals.pretty = NODE_ENV !== "production"; // Indente correctement le HTML e
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// app.use(
+//   session({
+//       name: "login",
+//       secret: "alklkdin987hdjd",
+//       resave: true,
+//       saveUninitialized: true,
+//   })
+// );
+
+// app.use(function (req, res, next) {
+//   app.locals = {
+//       title: "Login",
+//       isAuth: req.session?.auth ? req.session.auth : false
+//   };
+//   next();
+// });
+
 app.use(router);
 app.use("/", route);
 

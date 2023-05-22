@@ -1,4 +1,4 @@
-import { TrainModel } from "../model/Train.js";
+import { PassengerModel } from "../model/Passengers.js";
 
 export default async function (req, res) {
   let data = [];
@@ -12,16 +12,15 @@ export default async function (req, res) {
   const asArray = Object.entries(params)
   const filtered = asArray.filter(([key, value]) => value);
 
-  const passengers = await TrainModel.find();
-  let searchData = passengers;
+  const passengers = await PassengerModel.find();
 
   // filtre sur la base des passagers vivant et mort 
   filtered.map((elemSearch) => {
-    searchData = searchData.filter(elem => elem[elemSearch[0]] == elemSearch[1]);
+    passengers = passengers.filter(elem => elem[elemSearch[0]] == elemSearch[1]);
   });
 
-  const passengersAlive = searchData.filter(elem => elem.Survived === 1);
-  const passengersDead = searchData.filter(elem => elem.Survived === 0);
+  const passengersAlive = passengers.filter(elem => elem.Survived === 1);
+  const passengersDead = passengers.filter(elem => elem.Survived === 0);
   data.push(passengers.length - passengersAlive.length - passengersDead.length, passengersAlive.length, passengersDead.length);
 
   console.log({searchData})

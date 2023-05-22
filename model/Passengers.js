@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 const { Schema, model } = mongoose
 
-const TrainSchema = new Schema({
+const PassengerSchema = new Schema({
   PassengerId: Number,
   Survived: Number,
   Pclass: Number,
@@ -16,4 +16,4 @@ const TrainSchema = new Schema({
   Embarked: Number,
 })
 
-export const TrainModel = model('passengers', TrainSchema)
+export const PassengerModel = model('passengers', PassengerSchema)
