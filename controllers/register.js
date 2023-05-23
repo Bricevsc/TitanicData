@@ -1,26 +1,52 @@
 import { UserModel } from "../model/User.js";
-import crypto from 'crypto'
+import argon2 from "argon2";
+
 
 export default async function (req, res) {
-    req.session.message = null
-    if (req.body.email && req.body.password) {
-        // si tous les champs sont pas rempli
-        const data = await UserModel.findOne({ email: req.body.email });
-        if (!data) {
-            //si aucun user n'est deja crée avec cette email
-            const sha256Hasher = crypto.createHmac("sha256", process.env.SECRET_HASH);
-            const hash = sha256Hasher.update(req.body.password).digest("hex");
-            await UserModel.create({ email: req.body.email, password: hash });
-            res.redirect("/login");
-            return;
-        }
-        //si il y a deja un user avec cette email
-        req.session.message = "Email déjà existant."
-        res.redirect("/");
-        return;
+    // why not use Joi ?
+    const { firstname, lastname, email, password } = req.body;
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+
+    if (!email.match(emailRegex)) {
+        console.log('email incorect');
+        res.send({ firstname, lastname, email, password, errorMessage: 'Error: Invalid email' });
+        return
     }
-    // si tous les champs ne sont pas rempli
-    req.session.message = "Veuillez remplir tout les champs."
-    res.redirect("/");
-    return;
+
+
+    try {
+        const user = await UserModel.findOne({ email })
+        if (!user) {
+            const password = await argon2.hash(password);
+            // const user = { firstname, lastname, email, password }
+
+            const user = new UserModel({ ...req.body, password })
+            await user.save()
+            // await UserModel.create(user);
+            console.log({ status: 'user registered', mail: user.email });
+            // res.redirect('/')
+            res.status(201).send({ ok: true, user })
+
+
+            // try{
+            //     //requesting....
+
+            //     // <Redirect path="/" />
+            // }
+            // catch(err){
+            //     //dealing with the error
+            // }
+
+            // const hash = await argon2.hash(password);
+            // const user = { firstname, lastname, email, password: hash }
+            // await UserModel.create(user);
+            // console.log({ status: 'user registered', mail: user.email });
+            // res.redirect('/')
+        } else {
+
+            res.status(400).send({ errorMessage: 'Error: Bad request' });
+        }
+    } catch (err) {
+        res.status(500).json({ status: 'error', message: err.message })
+    }
 }

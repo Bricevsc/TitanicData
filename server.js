@@ -2,12 +2,14 @@ import dotenv from "dotenv";
 import express from "express";
 import router from "./routes/routes.js";
 import route from "./routes/routes.js";
+import session from "express-session";
+import MongoStore from 'connect-mongo';
 import("./config/db.js");
 import cors from "cors";
 
 dotenv.config({ path: "config/.env" });
 
-const { APP_HOSTNAME, APP_PORT, NODE_ENV, FRONT_END_URL } = process.env;
+const { APP_HOSTNAME, APP_PORT, NODE_ENV, FRONT_END_URL, MONGO_SESSIONS_URL, APP_SECRET } = process.env;
 
 const app = express();
 
@@ -24,6 +26,17 @@ app.locals.pretty = NODE_ENV !== "production"; // Indente correctement le HTML e
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+app.use(session({
+  name: 'authentication',
+  secret: APP_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  // store: MongoStore.create({ mongoUrl: MONGO_SESSIONS_URL }),
+  cookie: { maxAge: 180 * 60 * 1000 } // on détermine la durée de vie de la session
+}));
+
+
 
 // app.use(
 //   session({

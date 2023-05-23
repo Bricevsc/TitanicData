@@ -23,8 +23,7 @@ export default async function (req, res) {
   const passengersDead = passengers.filter(elem => elem.Survived === 0);
   data.push(passengers.length - passengersAlive.length - passengersDead.length, passengersAlive.length, passengersDead.length);
 
-  console.log({searchData})
-  res.send({data})
 
-  // res.render('dashboard', { aaa: data })
+  res.send({ data })
+
 };
