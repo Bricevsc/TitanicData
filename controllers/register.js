@@ -16,11 +16,14 @@ export default async function (req, res) {
 
     try {
         const user = await UserModel.findOne({ email })
+        // console.log({user})
         if (!user) {
-            const password = await argon2.hash(password);
+            const hashPassword = await argon2.hash(password);
             // const user = { firstname, lastname, email, password }
 
-            const user = new UserModel({ ...req.body, password })
+            const user = new UserModel({ ...req.body, password: hashPassword })
+            
+            console.log('user =', user)
             await user.save()
             // await UserModel.create(user);
             console.log({ status: 'user registered', mail: user.email });
