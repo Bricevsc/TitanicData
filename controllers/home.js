@@ -32,15 +32,10 @@ export default async function (req, res) {
             if (passwordVerify) {
                 req.session.auth = true;
                 res.status(200).send({ auth: true })
-            }
-            else {
-                res.status(401).send({ auth: false, error: "connection error: verify password or email" })
+                return
             }
         }
-        else {
-            res.status(401).send({ auth: false, error: "connection error: verify password or email" })
-        }
-
+        res.status(401).send({ auth: false, error: "connection error: verify password or email" })
     } catch (err) {
         res.status(500).send({ auth: false, error: err.message })
     }
