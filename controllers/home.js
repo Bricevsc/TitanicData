@@ -1,4 +1,3 @@
-import { response } from "express";
 import { UserModel } from "../model/User.js";
 import argon2 from "argon2";
 
@@ -21,13 +20,13 @@ export default async function (req, res) {
         const user = await UserModel.findOne({ email })
         const passwordVerify = await argon2.verify(user.password, password)
         if (passwordVerify) {
-            req.session.auth = true;
-            res.status(201).send({ ok: true, user })
+            // req.session.auth = true;
+            res.status(201).send({ auth: true })
         } else {
             errorMessages.push(`Invalid email or password`);
-            res.send({ errorMessages: errorMessages })
+            res.status(401).send({ auth: false, errorMessages: errorMessages })
         }
     } catch (err) {
-        res.status(500).json({ status: 'error', message: err.message })
+        res.status(500).send({ auth: false, status: 'error', message: err.message })
     }
 }
