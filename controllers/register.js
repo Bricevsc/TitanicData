@@ -5,8 +5,9 @@ import argon2 from "argon2";
 export default async function (req, res) {
 
     try {
+        const { firsname, lastname, email, password } = req.body;
+
         const user = await UserModel.findOne({ email })
-        // console.log({user})
         if (!user) {
             const hashPassword = await argon2.hash(password);
             // const user = { firstname, lastname, email, password }
@@ -18,28 +19,14 @@ export default async function (req, res) {
             // await UserModel.create(user);
             console.log({ status: 'user registered', mail: user.email });
             // res.redirect('/')
-            res.status(201).send({ ok: true, user })
+            res.status(201).send({ isRegistered: true, user: { id: user._id, firstname: user.firstName, lastname: user.lastName } })
 
 
-            // try{
-            //     //requesting....
-
-            //     // <Redirect path="/" />
-            // }
-            // catch(err){
-            //     //dealing with the error
-            // }
-
-            // const hash = await argon2.hash(password);
-            // const user = { firstname, lastname, email, password: hash }
-            // await UserModel.create(user);
-            // console.log({ status: 'user registered', mail: user.email });
-            // res.redirect('/')
         } else {
 
-            res.status(400).send({ errorMessage: 'Error: Bad request' });
+            res.status(400).send({ error: 'Error: Bad request' });
         }
     } catch (err) {
-        res.status(500).json({ status: 'error', message: err.message })
+        res.status(500).json({ isRegistered: false, error: err.message })
     }
 }
