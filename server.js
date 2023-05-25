@@ -18,6 +18,7 @@ const corsOptions = {
   preflightContinue: false,
   optionsSuccessStatus: 204,
   credentials: true,
+  exposedHeaders: ['x-auth-token'],
 };
 app.use(cors(corsOptions));
 
