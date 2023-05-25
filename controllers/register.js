@@ -5,7 +5,7 @@ import argon2 from "argon2";
 export default async function (req, res) {
 
     try {
-        const { firsname, lastname, email, password } = req.body;
+        const { email, password } = req.body;
 
         const user = await UserModel.findOne({ email })
         if (!user) {
