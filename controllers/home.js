@@ -1,6 +1,12 @@
 import { UserModel } from "../model/User.js";
 import argon2 from "argon2";
-import Joi from "joi";
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+import _ from "underscore"
+
+dotenv.config({ path: "config/.env" });
+
+const { PRIVATE_KEY } = process.env;
 
 
 export default async function (req, res) {
@@ -11,8 +17,17 @@ export default async function (req, res) {
         if (user) {
             const passwordVerify = await argon2.verify(user.password, password)
             if (passwordVerify) {
-                req.session.auth = true;
-                res.status(200).send({ auth: true });
+                const token = jwt.sign(
+                    {
+                        id: user._id,
+                        email: user.email,
+                        firstname: user.firstName,
+                        lastname: user.lastName,
+                        type: 'user'
+                    },
+                    PRIVATE_KEY,
+                    { expiresIn: '2h' })
+                res.status(200).header('x-auth-token', token).send(JSON.stringify(_.pick(user, ['_id', 'firstname', 'lastname', 'email'])))
                 return
             }
         }
