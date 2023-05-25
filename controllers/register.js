@@ -3,16 +3,6 @@ import argon2 from "argon2";
 
 
 export default async function (req, res) {
-    // why not use Joi ?
-    const { firstname, lastname, email, password } = req.body;
-    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-    if (!email.match(emailRegex)) {
-        console.log('email incorect');
-        res.send({ firstname, lastname, email, password, errorMessage: 'Error: Invalid email' });
-        return
-    }
-
 
     try {
         const user = await UserModel.findOne({ email })
@@ -22,7 +12,7 @@ export default async function (req, res) {
             // const user = { firstname, lastname, email, password }
 
             const user = new UserModel({ ...req.body, password: hashPassword })
-            
+
             console.log('user =', user)
             await user.save()
             // await UserModel.create(user);
