@@ -3,13 +3,21 @@ import { PassengerModel } from "../model/Passengers.js";
 export default async function (req, res) {
 
   const { sex, pclass, age } = req.body
+  const query = sex === 'tous' ?
+    {
+      Pclass: pclass,
+      Age: age,
+    } :
+    {
+      Sex: sex,
+      Pclass: pclass,
+      Age: age
+    }
 
-  const passengers = await PassengerModel.find();
+  console.log('query', query);
 
-
-  const survivedPassengers = await PassengerModel.count()
-  const deadPassengers = await PassengerModel.count()
-
+  const survivedPassengers = await PassengerModel.countDocuments({ ...query, Survived: '1' })
+  const deadPassengers = await PassengerModel.countDocuments({ ...query, Survived: '0' })
 
   res.send({ survivedPassengers, deadPassengers })
 

@@ -7,7 +7,7 @@ import validateRegisterPayload from "../middlewares/validateRegisterPayload.js";
 const router = express.Router();
 
 router.post("/", validateLoginPayload, login);
-router.get("/dashboard", dashboardController);
+router.post("/dashboard", dashboardController);
 router.post("/register", validateRegisterPayload, registerController);
 
 
