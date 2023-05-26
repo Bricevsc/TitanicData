@@ -1,7 +1,7 @@
 import { PassengerModel } from "../model/Passengers.js";
 
 export default async function (req, res) {
-
+console.log ('')
   const { sex, pclass, age } = req.body
   const query = sex === 'tous' ?
     {
